@@ -22,10 +22,10 @@
         <div class="col-md-auto col-lg-4">
           <ul class="nav justify-content-center">
             <li class="nav-item">
-              <a class="nav-link active text-success" href="#">MASCULINO</a>
+              <a id="menBt" class="nav-link text-success" href="#">MASCULINO</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link text-info" href="#">FEMININO</a>
+              <a id="womenBt" class="nav-link text-info" href="#">FEMININO</a>
             </li>
           </ul>
         </div>
@@ -33,7 +33,7 @@
     </div>
 
     <div class="table-responsive">
-      <table class="table table-striped">
+      <table id="menLeaderboardTable" class="table table-striped">
         <thead class="thead-dark">
           <tr>
             <th scope="col">#</th>
@@ -47,31 +47,30 @@
             <th scope="col">Score</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>1</td>
-          </tr>
 
-          <tr>
-            <th scope="row">2</th>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>2</td>
-          </tr>
+        <tbody id="menLeaderboardBody">
         </tbody>
+
+      </table>
+
+      <table id="womenLeaderboardTable" class="table table-striped">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nome</th>
+            <th scope="col">Box</th>
+            <th scope="col">18.1</th>
+            <th scope="col">18.2</th>
+            <th scope="col">18.3</th>
+            <th scope="col">18.4</th>
+            <th scope="col">18.5</th>
+            <th scope="col">Score</th>
+          </tr>
+        </thead>
+
+        <tbody id="womenLeaderboardBody">
+        </tbody>
+
       </table>
     </div>
 
@@ -86,5 +85,8 @@
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+  <script src="assets/js/athletes.json"></script>
+  <script src="assets/js/leaderboard.json"></script>
 </body>
 </html>
