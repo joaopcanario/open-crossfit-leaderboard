@@ -2,13 +2,12 @@
   var menLeaderboardTable = document.getElementById('menLeaderboardTable');
   var menLeaderboard = document.getElementById('menLeaderboardBody');
 
-  console.log(menLeaderboardTable);
+  menLeaderboardTable.style = 'display: none';
 
   var womenLeaderboardTable = document.getElementById('womenLeaderboardTable');
   var womenLeaderboard = document.getElementById('womenLeaderboardBody');
 
-
-  console.log(womenLeaderboardTable);
+  womenLeaderboardTable.style = 'display: none';
 
   loadJSON('assets/data/men_athletes.json', function (athletes){
     addToLeaderboard(JSON.parse(athletes), menLeaderboard);
@@ -23,8 +22,6 @@
 
     menLeaderboardTable.style = 'display: block';
     womenLeaderboardTable.style = 'display: none';
-
-    addLeaderboardHead();
   });
 
   document.getElementById('womenBt').addEventListener('click', function(e) {
@@ -32,9 +29,9 @@
 
     menLeaderboardTable.style = 'display: none';
     womenLeaderboardTable.style = 'display: block';
-
-    addLeaderboardHead();
   });
+
+  menLeaderboardTable.style = 'display: block';
 })();
 
 function loadJSON(file, callback) {
