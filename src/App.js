@@ -1,10 +1,72 @@
 import React, { Component } from 'react';
 import {Helmet} from "react-helmet";
+import autoBind from 'react-autobind';
 
 import logo from './logo.png';
+import menData from './db/men_athletes';
+import womenData from './db/women_athletes';
+import Athlete from './Athlete';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    autoBind(this);
+    this.state = {
+      isMen: 'active',
+      isWomen: '',
+    };
+  }
+
+  componentDidMount() {
+    menData.forEach(this.addToLeaderboard);
+  }
+
+  addToLeaderboard(athlete, index) {
+    const leaderboard = document.getElementById('leaderboardBody');
+    const row = document.createElement('tr');
+
+    const pos = document.createElement('th');
+    pos.setAttribute('scope', 'row');
+    pos.innerHTML = index + 1;
+
+    row.appendChild(pos);
+    row.appendChild(this.createHTMLElement(athlete.competitorName));
+    row.appendChild(this.createHTMLElement(athlete.affiliateName));
+    row.appendChild(this.createHTMLElement(athlete.scores[0].scoreDisplay));
+    row.appendChild(this.createHTMLElement('-'));
+    row.appendChild(this.createHTMLElement('-'));
+    row.appendChild(this.createHTMLElement('-'));
+    row.appendChild(this.createHTMLElement('-'));
+    row.appendChild(this.createHTMLElement(index + 1));
+
+    leaderboard.append(row);
+  }
+
+  createHTMLElement(value) {
+    var elem = document.createElement('td');
+    elem.innerHTML = value;
+
+    return elem;
+  }
+
+  toggleCategory(event) {
+    const { target } = event;
+    const attr = target.getAttribute('dataref');
+    const leaderboard = document.getElementById('leaderboardBody');
+
+    leaderboard.innerHTML = "";
+    if (attr === 'men') {
+      this.setState({ isMen: 'active', isWomen: '' });
+      menData.forEach(this.addToLeaderboard);
+    } else if (attr === 'women') {
+      this.setState({ isMen: '', isWomen: 'active' });
+      womenData.forEach(this.addToLeaderboard);
+    }
+  }
+
   render() {
+    const { isMen, isWomen, athletes } = this.state;
+    console.log(athletes);
     const boostrap = {
       rel: 'stylesheet',
       href: 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css',
@@ -33,8 +95,8 @@ class App extends Component {
               <div className="col-md-auto col-lg-4">
 
                 <div className="btn-group">
-                  <button class="btn btn-primary active">MASCULINO</button>
-                  <button class="btn btn-primary">FEMININO</button>
+                  <button className={`btn btn-primary ${isMen}`} dataref="men" onClick={this.toggleCategory}>MASCULINO</button>
+                  <button className={`btn btn-primary ${isWomen}`} dataref="women" onClick={this.toggleCategory}>FEMININO</button>
                 </div>
 
               </div>
@@ -42,7 +104,7 @@ class App extends Component {
           </div>
 
           <div className="table-responsive">
-            <table id="menLeaderboardTable" className="table table-striped">
+            <table id="leaderboardTable" className="table table-striped">
               <thead className="thead-dark">
                 <tr>
                   <th scope="col">#</th>
@@ -57,27 +119,7 @@ class App extends Component {
                 </tr>
               </thead>
 
-              <tbody id="menLeaderboardBody">
-              </tbody>
-
-            </table>
-
-            <table id="womenLeaderboardTable" className="table table-striped">
-              <thead className="thead-dark">
-                <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Nome</th>
-                  <th scope="col">Box</th>
-                  <th scope="col">18.1</th>
-                  <th scope="col">18.2</th>
-                  <th scope="col">18.3</th>
-                  <th scope="col">18.4</th>
-                  <th scope="col">18.5</th>
-                  <th scope="col">Score</th>
-                </tr>
-              </thead>
-
-              <tbody id="womenLeaderboardBody">
+              <tbody id="leaderboardBody">
               </tbody>
 
             </table>
