@@ -5,7 +5,6 @@ import autoBind from 'react-autobind';
 import logo from './logo.png';
 import menData from './db/men_athletes';
 import womenData from './db/women_athletes';
-import Athlete from './Athlete';
 
 class App extends Component {
   constructor(props) {
