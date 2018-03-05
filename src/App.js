@@ -3,8 +3,6 @@ import {Helmet} from "react-helmet";
 import autoBind from 'react-autobind';
 
 import logo from './logo.png';
-// import menData from './db/men_athletes';
-// import womenData from './db/women_athletes';
 
 const API = 'http://cfopen-api.herokuapp.com/api/v1/open/leaderboards?name=Bahia&division='
 
