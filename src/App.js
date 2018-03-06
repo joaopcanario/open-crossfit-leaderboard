@@ -19,7 +19,7 @@ class App extends Component {
   }
 
   fetchAPI(division) {
-    const API_URL = 'http://cfopen-api.herokuapp.com/api/v1/open/leaderboards?name=Bahia&division='
+    const API_URL = 'https://cfopen-api.herokuapp.com/api/v1/open/leaderboards?name=Bahia&division='
     fetch(`${API_URL}${division}`)
     .then(res => res.json())
     .then(data => { data.forEach(this.addToLeaderboard) })
