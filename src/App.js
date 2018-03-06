@@ -3,8 +3,6 @@ import {Helmet} from "react-helmet";
 import autoBind from 'react-autobind';
 
 import logo from './logo.png';
-import menData from './db/men_athletes';
-import womenData from './db/women_athletes';
 
 class App extends Component {
   constructor(props) {
@@ -17,8 +15,33 @@ class App extends Component {
   }
 
   componentDidMount() {
-    menData.forEach(this.addToLeaderboard);
+    fetchAPI('Masculino');
   }
+
+  fetchAPI(division) {
+    const API_URL = 'http://cfopen-api.herokuapp.com/api/v1/open/leaderboards?name=Bahia&division='
+    fetch(`${API_URL}${division}`)
+    .then(res => res.json())
+    .then(data => { data.forEach(this.addToLeaderboard) })
+    .catch(err => { console.log('Error happened during fetching!', err); });
+  }
+
+  ordinalSuffix(i) {
+      const j = i % 10;
+      const k = i % 100;
+      let suffix = 'th';
+
+      if (j === 1 && k !== 11) {
+          suffix = "st";
+      } else if (j === 2 && k !== 12) {
+          suffix = "nd";
+      } else if (j === 3 && k !== 13) {
+          suffix = "rd";
+      }
+
+      return `${i}${suffix}`;
+  }
+
 
   addToLeaderboard(athlete, index) {
     const leaderboard = document.getElementById('leaderboardBody');
@@ -28,21 +51,31 @@ class App extends Component {
     pos.setAttribute('scope', 'row');
     pos.innerHTML = index + 1;
 
+    const name = athlete.competitorName.split(" ");
+
+    if (name.length > 3) {
+      athlete.competitorName = `${name[0]} ${name[1]} ${name[name.length - 1]}`;
+    }
+
     row.appendChild(pos);
-    row.appendChild(this.createHTMLElement(athlete.competitorName));
-    row.appendChild(this.createHTMLElement(athlete.affiliateName));
-    row.appendChild(this.createHTMLElement(athlete.scores[0].scoreDisplay));
-    row.appendChild(this.createHTMLElement('-'));
-    row.appendChild(this.createHTMLElement('-'));
-    row.appendChild(this.createHTMLElement('-'));
-    row.appendChild(this.createHTMLElement('-'));
-    row.appendChild(this.createHTMLElement(index + 1));
+    row.appendChild(this.insertLine(`<strong>${athlete.competitorName}</strong><br><small>${athlete.affiliateName}</small>`));
+    row.appendChild(this.insertLine(`<strong>${athlete.overallScore}</strong>`));
+
+    athlete.scores.forEach(score => {
+      let value = '';
+
+      if (score.rank > 0) {
+        value = `<strong>${this.ordinalSuffix(score.rank)}</strong><br><small>(${score.scoreDisplay})</small>`;
+      }
+
+      row.appendChild(this.insertLine(value));
+    });
 
     leaderboard.append(row);
   }
 
-  createHTMLElement(value) {
-    var elem = document.createElement('td');
+  insertLine(value) {
+    let elem = document.createElement('td');
     elem.innerHTML = value;
 
     return elem;
@@ -54,13 +87,15 @@ class App extends Component {
     const leaderboard = document.getElementById('leaderboardBody');
 
     leaderboard.innerHTML = "";
+
     if (attr === 'men') {
       this.setState({ isMen: 'active', isWomen: '' });
-      menData.forEach(this.addToLeaderboard);
+      fetchAPI('Masculino');
     } else if (attr === 'women') {
       this.setState({ isMen: '', isWomen: 'active' });
-      womenData.forEach(this.addToLeaderboard);
+      fetchAPI('Feminino');
     }
+
   }
 
   render() {
@@ -106,15 +141,15 @@ class App extends Component {
             <table id="leaderboardTable" className="table table-striped">
               <thead className="thead-dark">
                 <tr>
-                  <th scope="col">#</th>
+                  <th scope="col">Rank</th>
                   <th scope="col">Nome</th>
-                  <th scope="col">Box</th>
+                  <th scope="col">Pontos</th>
                   <th scope="col">18.1</th>
                   <th scope="col">18.2</th>
+                  <th scope="col">18.2a</th>
                   <th scope="col">18.3</th>
                   <th scope="col">18.4</th>
                   <th scope="col">18.5</th>
-                  <th scope="col">Score</th>
                 </tr>
               </thead>
 
