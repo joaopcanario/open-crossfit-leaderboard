@@ -4,8 +4,6 @@ import autoBind from 'react-autobind';
 
 import logo from './logo.png';
 
-const API = 'http://cfopen-api.herokuapp.com/api/v1/open/leaderboards?name=Bahia&division='
-
 class App extends Component {
   constructor(props) {
     super(props);
@@ -17,28 +15,31 @@ class App extends Component {
   }
 
   componentDidMount() {
-    fetch(API+'Masculino')
+    fetchAPI('Masculino');
+  }
+
+  fetchAPI(division) {
+    const API_URL = 'http://cfopen-api.herokuapp.com/api/v1/open/leaderboards?name=Bahia&division='
+    fetch(`${API_URL}${division}`)
     .then(res => res.json())
-    .then(data => { data.forEach(this.addToLeaderboard); })
+    .then(data => { data.forEach(this.addToLeaderboard) })
     .catch(err => { console.log('Error happened during fetching!', err); });
   }
 
-  ordinal_suffix(i) {
-      var j = i % 10, k = i % 100;
+  ordinalSuffix(i) {
+      const j = i % 10;
+      const k = i % 100;
+      let suffix = 'th';
 
       if (j === 1 && k !== 11) {
-          return i + "st";
+          suffix = "st";
+      } else if (j === 2 && k !== 12) {
+          suffix = "nd";
+      } else if (j === 3 && k !== 13) {
+          suffix = "rd";
       }
 
-      if (j === 2 && k !== 12) {
-          return i + "nd";
-      }
-
-      if (j === 3 && k !== 13) {
-          return i + "rd";
-      }
-
-      return i + "th";
+      return `${i}${suffix}`;
   }
 
 
@@ -50,21 +51,21 @@ class App extends Component {
     pos.setAttribute('scope', 'row');
     pos.innerHTML = index + 1;
 
-    var name = athlete.competitorName.split(" ");
+    const name = athlete.competitorName.split(" ");
 
     if (name.length > 3) {
-      athlete.competitorName = name[0] + " " + name[1] + " " + name[name.length - 1];
+      athlete.competitorName = `${name[0]} ${name[1]} ${name[name.length - 1]}`;
     }
 
     row.appendChild(pos);
-    row.appendChild(this.insertLine('<strong>' + athlete.competitorName + '</strong><br><small>' + athlete.affiliateName + '</small>'));
-    row.appendChild(this.insertLine('<strong>' + athlete.overallScore + '</strong>'));
+    row.appendChild(this.insertLine(`<strong>${athlete.competitorName}</strong><br><small>${athlete.affiliateName}</small>`));
+    row.appendChild(this.insertLine(`<strong>${athlete.overallScore}</strong>`));
 
     athlete.scores.forEach(score => {
-      var value = '';
+      let value = '';
 
       if (score.rank > 0) {
-        value = '<strong>' + this.ordinal_suffix(score.rank) + '</strong> <small>(' + score.scoreDisplay + ')</small>';
+        value = `<strong>${this.ordinalSuffix(score.rank)}</strong><br><small>(${score.scoreDisplay})</small>`;
       }
 
       row.appendChild(this.insertLine(value));
@@ -74,7 +75,7 @@ class App extends Component {
   }
 
   insertLine(value) {
-    var elem = document.createElement('td');
+    let elem = document.createElement('td');
     elem.innerHTML = value;
 
     return elem;
@@ -89,19 +90,10 @@ class App extends Component {
 
     if (attr === 'men') {
       this.setState({ isMen: 'active', isWomen: '' });
-
-      fetch(API+'Masculino')
-      .then(res => res.json())
-      .then(data => { data.forEach(this.addToLeaderboard); })
-      .catch(err => { console.log('Error happened during fetching!', err); });
-
+      fetchAPI('Masculino');
     } else if (attr === 'women') {
       this.setState({ isMen: '', isWomen: 'active' });
-
-      fetch(API+'Feminino')
-      .then(res => res.json())
-      .then(data => { data.forEach(this.addToLeaderboard); })
-      .catch(err => { console.log('Error happened during fetching!', err); });
+      fetchAPI('Feminino');
     }
 
   }
@@ -151,7 +143,7 @@ class App extends Component {
                 <tr>
                   <th scope="col">Rank</th>
                   <th scope="col">Nome</th>
-                  <th scope="col">Points</th>
+                  <th scope="col">Pontos</th>
                   <th scope="col">18.1</th>
                   <th scope="col">18.2</th>
                   <th scope="col">18.2a</th>
