@@ -15,7 +15,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    fetchAPI('Masculino');
+    this.fetchAPI('Masculino');
   }
 
   fetchAPI(division) {
@@ -90,10 +90,10 @@ class App extends Component {
 
     if (attr === 'men') {
       this.setState({ isMen: 'active', isWomen: '' });
-      fetchAPI('Masculino');
+      this.fetchAPI('Masculino');
     } else if (attr === 'women') {
       this.setState({ isMen: '', isWomen: 'active' });
-      fetchAPI('Feminino');
+      this.fetchAPI('Feminino');
     }
 
   }
