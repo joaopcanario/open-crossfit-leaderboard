@@ -43,13 +43,13 @@ class App extends Component {
   }
 
 
-  addToLeaderboard(athlete, index) {
+  addToLeaderboard(athlete) {
     const leaderboard = document.getElementById('leaderboardBody');
     const row = document.createElement('tr');
 
     const pos = document.createElement('th');
     pos.setAttribute('scope', 'row');
-    pos.innerHTML = index + 1;
+    pos.innerHTML = athlete.overallRank;
 
     const name = athlete.competitorName.split(" ");
 
@@ -141,7 +141,7 @@ class App extends Component {
             <table id="leaderboardTable" className="table table-striped">
               <thead className="thead-dark">
                 <tr>
-                  <th scope="col">Rank</th>
+                  <th scope="col">#</th>
                   <th scope="col">Nome</th>
                   <th scope="col">Pontos</th>
                   <th scope="col">18.1</th>
