@@ -9,8 +9,7 @@ class App extends Component {
     super(props);
     autoBind(this);
     this.state = {
-      isMen: 'active',
-      isWomen: '',
+      category: 'isMen',
     };
   }
 
@@ -20,6 +19,7 @@ class App extends Component {
 
   fetchAPI(division) {
     const API_URL = 'https://cfopen-api.herokuapp.com/api/v1/open/leaderboards?name=Bahia&division='
+
     fetch(`${API_URL}${division}`)
     .then(res => res.json())
     .then(data => { data.forEach(this.addToLeaderboard) })
@@ -88,19 +88,13 @@ class App extends Component {
 
     leaderboard.innerHTML = "";
 
-    if (attr === 'men') {
-      this.setState({ isMen: 'active', isWomen: '' });
-      this.fetchAPI('Masculino');
-    } else if (attr === 'women') {
-      this.setState({ isMen: '', isWomen: 'active' });
-      this.fetchAPI('Feminino');
-    }
-
+    this.setState({ category: attr });
+    const fetchCategory = attr === 'isMen' ? 'Masculino' : 'Feminino';
+    this.fetchAPI(fetchCategory);
   }
 
   render() {
-    const { isMen, isWomen, athletes } = this.state;
-    console.log(athletes);
+    const { category } = this.state;
     const boostrap = {
       rel: 'stylesheet',
       href: 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css',
@@ -129,8 +123,20 @@ class App extends Component {
               <div className="col-md-auto col-lg-4">
 
                 <div className="btn-group">
-                  <button className={`btn btn-primary ${isMen}`} dataref="men" onClick={this.toggleCategory}>MASCULINO</button>
-                  <button className={`btn btn-primary ${isWomen}`} dataref="women" onClick={this.toggleCategory}>FEMININO</button>
+                  <button
+                    className={`btn btn-primary ${ category === 'isMen' ? 'active' : '' }`}
+                    dataref="isMen"
+                    onClick={this.toggleCategory}
+                  >
+                    MASCULINO
+                  </button>
+
+                  <button className={`btn btn-primary ${ category === 'isWomen' ? 'active' : '' }`}
+                    dataref="isWomen"
+                    onClick={this.toggleCategory}
+                  >
+                    FEMININO
+                  </button>
                 </div>
 
               </div>
