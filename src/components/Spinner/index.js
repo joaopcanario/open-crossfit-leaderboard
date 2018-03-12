@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 
+import './style.css';
+
 class Spinner extends Component {
   render() {
     return (
-      <svg width="100px" height="100px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+      <svg className="Spinner" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
         <g transform="rotate(0 50 50)">
         <rect x="47" y="24" rx="9.4" ry="4.8" width="6" height="12" fill="#337ab7">
         <animate attributeName="opacity" values="1;0" times="0;1" dur="1s" begin="-0.9166666666666666s" repeatCount="indefinite"></animate>
