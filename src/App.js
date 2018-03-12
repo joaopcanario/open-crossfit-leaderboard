@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import {Helmet} from "react-helmet";
 import autoBind from 'react-autobind';
 
+import Spinner from './components/Spinner/';
 import logo from './logo.png';
+
+const API_URL = 'https://cfopen-api.herokuapp.com/api/v1/open/leaderboards?name=Bahia&division='
 
 class App extends Component {
   constructor(props) {
@@ -10,6 +13,7 @@ class App extends Component {
     autoBind(this);
     this.state = {
       category: 'isMen',
+      athletes: [],
     };
   }
 
@@ -18,12 +22,10 @@ class App extends Component {
   }
 
   fetchAPI(division) {
-    const API_URL = 'https://cfopen-api.herokuapp.com/api/v1/open/leaderboards?name=Bahia&division='
-
     fetch(`${API_URL}${division}`)
-    .then(res => res.json())
-    .then(data => { data.forEach(this.addToLeaderboard) })
-    .catch(err => { console.log('Error happened during fetching!', err); });
+      .then(res => res.json())
+      .then(data => { this.setState({ athletes: data }) })
+      .catch(err => { console.log('Error happened during fetching!', err); });
   }
 
   ordinalSuffix(i) {
@@ -42,59 +44,17 @@ class App extends Component {
       return `${i}${suffix}`;
   }
 
-
-  addToLeaderboard(athlete) {
-    const leaderboard = document.getElementById('leaderboardBody');
-    const row = document.createElement('tr');
-
-    const pos = document.createElement('th');
-    pos.setAttribute('scope', 'row');
-    pos.innerHTML = athlete.overallRank;
-
-    const name = athlete.competitorName.split(" ");
-
-    if (name.length > 3) {
-      athlete.competitorName = `${name[0]} ${name[1]} ${name[name.length - 1]}`;
-    }
-
-    row.appendChild(pos);
-    row.appendChild(this.insertLine(`<strong>${athlete.competitorName}</strong><br><small>${athlete.affiliateName}</small>`));
-    row.appendChild(this.insertLine(`<strong>${athlete.overallScore}</strong>`));
-
-    athlete.scores.forEach(score => {
-      let value = '';
-
-      if (score.rank > 0) {
-        value = `<strong>${this.ordinalSuffix(score.rank)}</strong><br><small>(${score.scoreDisplay})</small>`;
-      }
-
-      row.appendChild(this.insertLine(value));
-    });
-
-    leaderboard.append(row);
-  }
-
-  insertLine(value) {
-    let elem = document.createElement('td');
-    elem.innerHTML = value;
-
-    return elem;
-  }
-
   toggleCategory(event) {
     const { target } = event;
     const attr = target.getAttribute('dataref');
-    const leaderboard = document.getElementById('leaderboardBody');
 
-    leaderboard.innerHTML = "";
-
-    this.setState({ category: attr });
+    this.setState({ category: attr, athletes: [] });
     const fetchCategory = attr === 'isMen' ? 'Masculino' : 'Feminino';
     this.fetchAPI(fetchCategory);
   }
 
   render() {
-    const { category } = this.state;
+    const { category, athletes } = this.state;
     const boostrap = {
       rel: 'stylesheet',
       href: 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css',
@@ -160,9 +120,38 @@ class App extends Component {
               </thead>
 
               <tbody id="leaderboardBody">
+                {
+                  athletes.map((athlete, index) => {
+                    return (
+                      <tr>
+                        <th scope="row">{ athlete.overallRank }</th>
+                        <td>
+                          <strong>{ athlete.competitorName }</strong>
+                          <br />
+                          <small>{ athlete.affiliateName }</small>
+                        </td>
+                        <td><strong>{ athlete.overallScore }</strong></td>
+
+                        {
+                          athlete.scores.map((score) => {
+                            return (
+                              <td>
+                                <strong>{ this.ordinalSuffix(score.rank) }</strong>
+                                <br />
+                                <small>({ score.scoreDisplay })</small>
+                              </td>
+                            )
+                          })
+                        }
+                      </tr>
+                    )
+                  })
+                }
               </tbody>
 
             </table>
+
+            { athletes.length ? null : <Spinner /> }
           </div>
 
           <footer className="my-5 pt-5 text-muted text-center text-small">
