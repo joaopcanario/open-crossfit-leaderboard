@@ -134,13 +134,17 @@ class App extends Component {
 
                         {
                           athlete.scores.map((score) => {
-                            return (
-                              <td>
-                                <strong>{ this.ordinalSuffix(score.rank) }</strong>
-                                <br />
-                                <small>({ score.scoreDisplay })</small>
-                              </td>
-                            )
+                            if (score.rank === 0) {
+                              return (<td />)
+                            } else  {
+                              return (
+                                <td>
+                                  <strong>{ this.ordinalSuffix(score.rank) }</strong>
+                                  <br />
+                                  <small>({ score.scoreDisplay })</small>
+                                </td>
+                              )
+                            }
                           })
                         }
                       </tr>
