@@ -114,10 +114,10 @@ class App extends Component {
                   </button>
                 </div>
 
-                <div class="form-group">
+                <div className="form-group">
                   <input
                     id="searchText"
-                    class="form-control leaderboard-search"
+                    className="form-control leaderboard-search"
                     type="text"
                     name="searchText"
                     onChange={this.filterLeaderboard}
@@ -160,17 +160,15 @@ class App extends Component {
 
                         {
                           athlete.scores.map((score) => {
-                            if (score.rank === 0) {
-                              return (<td />)
-                            } else  {
-                              return (
+                            return (
+                              score.rank ?
                                 <td>
                                   <strong>{ this.ordinalSuffix(score.rank) }</strong>
                                   <br />
                                   <small>({ score.scoreDisplay })</small>
                                 </td>
-                              )
-                            }
+                              : <td />
+                            )
                           })
                         }
                       </tr>
