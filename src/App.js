@@ -3,7 +3,7 @@ import {Helmet} from "react-helmet";
 import autoBind from 'react-autobind';
 
 import Spinner from './components/Spinner/';
-import logo from './logo.png';
+import logo from './assets/logo.png';
 
 const API_URL = 'https://cfopen-api.herokuapp.com/api/v1/open/leaderboards?name=Bahia&division='
 
@@ -14,6 +14,7 @@ class App extends Component {
     this.state = {
       category: 'isMen',
       athletes: [],
+      filteredAthletes: [],
     };
   }
 
@@ -53,14 +54,28 @@ class App extends Component {
     this.fetchAPI(fetchCategory);
   }
 
+  filterLeaderboard({ target }) {
+    this.setState({
+      filteredAthletes: this.state.athletes.filter((athlete) => {
+        const { competitorName, affiliateName } = athlete;
+        return (
+          competitorName.toLowerCase().indexOf(target.value.toLowerCase()) >= 0 ||
+          affiliateName.toLowerCase().indexOf(target.value.toLowerCase()) >= 0
+        )
+      }),
+    });
+  }
+
   render() {
-    const { category, athletes } = this.state;
+    const { category, athletes, filteredAthletes } = this.state;
     const boostrap = {
       rel: 'stylesheet',
       href: 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css',
       integrity: 'sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm',
       crossorigin: 'anonymous',
     };
+
+    const athletesList = filteredAthletes.length ? filteredAthletes : athletes;
 
     return (
       <div className="App">
@@ -99,6 +114,17 @@ class App extends Component {
                   </button>
                 </div>
 
+                <div class="form-group">
+                  <input
+                    id="searchText"
+                    class="form-control leaderboard-search"
+                    type="text"
+                    name="searchText"
+                    onChange={this.filterLeaderboard}
+                    placeholder="Pesquise por atleta ou box"
+                  />
+                </div>
+
               </div>
             </div>
           </div>
@@ -121,7 +147,7 @@ class App extends Component {
 
               <tbody id="leaderboardBody">
                 {
-                  athletes.map((athlete, index) => {
+                  athletesList.map((athlete, index) => {
                     return (
                       <tr>
                         <th scope="row">{ athlete.overallRank }</th>

@@ -12,6 +12,11 @@ table td small {
   color: gray;
 }
 
+.leaderboard-search {
+  margin-top: 15px;
+  text-align: center;
+}
+
 @media only screen and (max-width: 1320px) {
   td {
     padding: 0px 8px 0px 8px !important;
