@@ -75,17 +75,18 @@ class App extends Component {
 
   getLeaderboardHead() {
     const w = parseInt(window.innerWidth, 10);
+    let elem = null;
 
     if (w <= 768) {
-      return (
+      elem = (
         <tr>
           <th scope="col">
             <h4>Atletas</h4>
           </th>
         </tr>
       );
-    } else if (w > 768 && w <= 1320) {
-      return (
+    } else if (w <= 1320) {
+      elem = (
         <tr>
           <th scope="col">Atletas</th>
           <th scope="col">18.1</th>
@@ -97,7 +98,7 @@ class App extends Component {
         </tr>
       );
     } else {
-      return (
+      elem = (
         <tr>
           <th scope="col">#</th>
           <th scope="col">Atletas</th>
@@ -111,18 +112,22 @@ class App extends Component {
         </tr>
       );
     }
+
+    return elem;
   }
 
   getScoreAsTable(scores) {
     return scores.map((score, index) => {
-      return ( score.rank ?
+      let elem = ( score.rank ?
         <td key={index}>
           <strong>{ this.ordinalSuffix(score.rank) }</strong>
           <br />
           <small>({ score.scoreDisplay })</small>
         </td>
         : <td key={index} />
-      )
+      );
+
+      return elem;
     });
   }
 
@@ -130,21 +135,23 @@ class App extends Component {
     return scores.map((score, index) => {
       const wods = [`18.1:`, `18.2:`, `18.2a:`, `18.3:`, `18.4:`, `18.5:`];
 
-      return ( score.rank ?
+      let elem = ( score.rank ?
         <li key={wods[index]}>
           <strong> {wods[index]}</strong> {this.ordinalSuffix(score.rank) } ({score.scoreDisplay})
         </li>
         : ''
-      )
+      );
+
+      return elem;
     });
   }
 
   getLeaderboardContent(athletes) {
     const w = parseInt(window.innerWidth, 10);
-    let content;
+    let elem = null;
 
     if (w <=   768) {
-      content = athletes.map((athlete, index) => {
+      elem = athletes.map((athlete, index) => {
         return (
           <tr key={index}>
             <td>
@@ -168,8 +175,8 @@ class App extends Component {
           </tr>
         )
       });
-    } else if (w > 768 && w <= 1320) {
-      content = athletes.map((athlete, index) => {
+    } else if (w <= 1320) {
+      elem = athletes.map((athlete, index) => {
         return (
           <tr key={index}>
             <td>
@@ -183,7 +190,7 @@ class App extends Component {
         )
       });
     } else {
-      content = athletes.map((athlete, index) => {
+      elem = athletes.map((athlete, index) => {
         return (
           <tr key={index}>
             <th scope="row">{ athlete.overallRank }</th>
@@ -201,7 +208,7 @@ class App extends Component {
       });
     }
 
-    return ( content );
+    return ( elem );
   }
 
   render() {
