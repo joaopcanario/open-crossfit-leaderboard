@@ -221,8 +221,6 @@ class App extends Component {
     };
 
     const athletesList = filteredAthletes.length ? filteredAthletes : athletes;
-    const head = this.getLeaderboardHead();
-    const rows = this.getLeaderboardContent(athletesList);
 
     return (
       <div className="App">
@@ -278,11 +276,11 @@ class App extends Component {
           <div className="table-responsive">
             <table id="leaderboardTable" className="table table-striped">
               <thead className="thead-dark">
-                { head }
+                { this.getLeaderboardHead() }
               </thead>
 
               <tbody id="leaderboardBody">
-                { rows }
+                { this.getLeaderboardContent(athletesList) }
               </tbody>
 
             </table>
